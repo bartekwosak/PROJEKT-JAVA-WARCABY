@@ -15,7 +15,7 @@ import javax.swing.JTextPane;
 
 public class Plansza extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private int tablicaPionkow[][];
+	static int tablicaPionkow[][];
 	private Integer szerokosc = 650;
 	private Integer wysokosc = 600;
 	private JButton start, wyjscie, opcje, multiplayer;
@@ -94,6 +94,10 @@ public class Plansza extends JFrame implements ActionListener {
 	}
 
 	protected void ustaw() {
+		for (int j = 0; j < 8; j++)
+			for (int i = 0; i < 8; i++) {
+				tablicaPionkow[i][j] = 0;
+			}
 		for (int j = 0; j < 3; j++)
 			for (int i = 0; i < 8; i++) {
 				if ((i + j) % 2 == 0)
@@ -125,12 +129,19 @@ public class Plansza extends JFrame implements ActionListener {
 		}
 		for (int j = 0; j < 8; j++)
 			for (int i = 0; i < 8; i++) {
-				if (tablicaPionkow[i][j] == 1)
+				if (tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 5){
+					g2d.setColor(Color.YELLOW);
+					g2d.drawRect(kafelki[i][j].x+3,kafelki[i][j].y+25, kafelki[i][j].width, kafelki[i][j].height);
+				}
+				}
+		for (int j = 0; j < 8; j++)
+			for (int i = 0; i < 8; i++) {
+				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 3 )
 					g2d.setColor(kolorPionkow1);
-				else if (tablicaPionkow[i][j] == 2)
+				else if (tablicaPionkow[i][j] == 2 || tablicaPionkow[i][j] == 4)
 					g2d.setColor(kolorPionkow2);
 
-				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 2)
+				if (tablicaPionkow[i][j] !=0 && tablicaPionkow[i][j] != 5)
 					g2d.fillOval(17 + 63 * i, 47 + 63 * j, 50, 50);
 			}
 		g2d.setColor(Color.BLACK);

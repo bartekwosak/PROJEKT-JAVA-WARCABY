@@ -9,10 +9,12 @@ import javax.swing.JFrame;
 public class KafelekInformacyjny extends JComponent implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
-	protected Integer x;
-	protected Integer y;
+	public Integer x;
+	public Integer y;
 	protected Integer width = 62;
 	protected Integer height = 62;
+	int _i;
+	int _j;
 	protected StringBuilder name = new StringBuilder();
 	protected static String tmp = "A1";
 	protected static JFrame parent;
@@ -21,6 +23,8 @@ public class KafelekInformacyjny extends JComponent implements MouseListener {
 		parent = f;
 		x = 8 + 63 * i;
 		y = 15 + 63 * j;
+		_i = i;
+		_j = j;
 		setBounds(x, y, width, height);
 		ustawNazwe(i, j);
 		addMouseListener(this);
@@ -58,8 +62,8 @@ public class KafelekInformacyjny extends JComponent implements MouseListener {
 		name.append(tmp);
 		name.append(j + 1);
 	}
-
-	void update() {
+	
+	void updateEnter() {
 		parent.repaint(560, 515, 25, 25);
 	}
 
@@ -72,11 +76,97 @@ public class KafelekInformacyjny extends JComponent implements MouseListener {
 	public void mouseEntered(MouseEvent e) {
 		Object source = e.getSource();
 		tmp = source.toString();
-		update();
+		updateEnter();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(Plansza.tablicaPionkow[_i][_j] !=5)
+		{
+			for (int j = 0; j < 8; j++)
+				for (int i = 0; i < 8; i++) {
+				if(Plansza.tablicaPionkow[i][j] == 3  ||Plansza.tablicaPionkow[i][j] == 4){
+					Plansza.tablicaPionkow[i][j] -= 2;
+					}
+				if(Plansza.tablicaPionkow[i][j] == 5)
+					Plansza.tablicaPionkow[i][j] = 0;
+				}
+			
+			
+			if(Plansza.tablicaPionkow[_i][_j] == 1 || Plansza.tablicaPionkow[_i][_j] == 2)
+			{
+				Plansza.tablicaPionkow[_i][_j] += 2;
+				if(Plansza.tablicaPionkow[_i][_j] == 4)
+				{
+					if(_i!=0 && _i!=7)
+					{
+						if(Plansza.tablicaPionkow[_i-1][_j-1] == 0)
+						{
+							Plansza.tablicaPionkow[_i-1][_j-1] = 5;
+						}
+						if(Plansza.tablicaPionkow[_i+1][_j-1] == 0)
+						{
+								Plansza.tablicaPionkow[_i+1][_j-1] = 5;
+						}
+					}
+					else if(_i == 0)
+					{
+						if(Plansza.tablicaPionkow[_i+1][_j-1] == 0)
+							Plansza.tablicaPionkow[_i+1][_j-1] = 5;
+					}
+					else if(_i == 7)
+					{
+						if(Plansza.tablicaPionkow[_i-1][_j-1] == 0)
+							Plansza.tablicaPionkow[_i-1][_j-1] = 5;
+					}
+				}
+				if(Plansza.tablicaPionkow[_i][_j] == 3)
+				{
+					if(_i!=0 && _i!=7)
+					{
+						System.out.println("heh");
+						if(Plansza.tablicaPionkow[_i-1][_j+1] == 0)
+						{
+							Plansza.tablicaPionkow[_i-1][_j+1] = 5;
+						}
+						if(Plansza.tablicaPionkow[_i+1][_j+1] == 0)
+						{
+								Plansza.tablicaPionkow[_i+1][_j+1] = 5;
+						}
+					}
+					else if(_i == 0)
+					{
+						if(Plansza.tablicaPionkow[_i+1][_j+1] == 0)
+							Plansza.tablicaPionkow[_i+1][_j+1] = 5;
+					}
+					else if(_i == 7)
+					{
+						if(Plansza.tablicaPionkow[_i-1][_j+1] == 0)
+							Plansza.tablicaPionkow[_i-1][_j+1] = 5;
+					}
+				}
+			}
+		}
+		else
+		{
+			for (int j = 0; j < 8; j++)
+				for (int i = 0; i < 8; i++) {
+					if(Plansza.tablicaPionkow[i][j] == 4)
+					{
+						Plansza.tablicaPionkow[i][j] = 0;
+						Plansza.tablicaPionkow[_i][_j] = 2;
+					}
+					if(Plansza.tablicaPionkow[i][j] == 3)
+					{
+						Plansza.tablicaPionkow[i][j] = 0;
+						Plansza.tablicaPionkow[_i][_j] = 1;
+					}
+					if(Plansza.tablicaPionkow[i][j] == 5)
+						Plansza.tablicaPionkow[i][j] = 0;
+				}
+			
+		}
+		parent.repaint();
 	}
 
 	@Override
