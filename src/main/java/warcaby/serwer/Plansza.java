@@ -20,31 +20,34 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 
 public class Plansza extends JFrame implements ActionListener, Serializable {
+	
 	private static final long serialVersionUID = 1L;
-	static int tablicaPionkow[][];
+	protected static int tablicaPionkow[][];
 	private Integer szerokosc = 650;
 	private Integer wysokosc = 600;
 	private JButton start, wyjscie, opcje, multiplayer;
 	private JLabel napisGlowny, napisWersja;
 	private Plansza plansza;
 	private JTextPane poleIP;
-	private KafelekInformacyjny[][] kafelki;
+	private Kafelek[][] kafelki;
 	protected static Color kolorPlanszy1;
 	protected static Color kolorPlanszy2;
 	protected static Color kolorPionkow1;
 	protected static Color kolorPionkow2;
 
-	ServerSocket serverSocket;
-	Socket socket;
-	static ObjectInputStream ois;
-	static ObjectOutputStream oos;
-	static boolean multi;
-
+	protected ServerSocket serverSocket;
+	protected Socket socket;
+	protected static ObjectInputStream ois;
+	protected static ObjectOutputStream oos;
+	protected static boolean multi;
+	protected static boolean game;
+	
 	public Plansza() {
 		super("Warcaby");
 		tablicaPionkow = new int[8][8];
-		kafelki = new KafelekInformacyjny[8][8];
+		kafelki = new Kafelek[8][8];
 		multi = false;
+		game = false;
 
 		setSize(szerokosc, wysokosc);
 		setLocationRelativeTo(plansza);
@@ -98,7 +101,7 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				kafelki[i][j] = new KafelekInformacyjny(this, i, j);
+				kafelki[i][j] = new Kafelek(this, i, j);
 				add(kafelki[i][j]);
 			}
 		}
@@ -123,6 +126,7 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 					tablicaPionkow[i][j] = 2;
 			}
 		}
+		game = true;
 	}
 
 	void odbierzPakiet() {
@@ -147,21 +151,21 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 		}
 		for (int j = 0; j < 8; j++)
 			for (int i = 0; i < 8; i++) {
-				if (tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 5) {
+				if (tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 5||tablicaPionkow[i][j] == 8||tablicaPionkow[i][j] == 9) {
 					g2d.setColor(Color.YELLOW);
 					g2d.drawRect(kafelki[i][j].x + 3, kafelki[i][j].y + 25, kafelki[i][j].width, kafelki[i][j].height);
 				}
 			}
 		for (int j = 0; j < 8; j++)
 			for (int i = 0; i < 8; i++) {
-				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 7)
+				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 7 || tablicaPionkow[i][j] == 9)
 					g2d.setColor(kolorPionkow1);
-				else if (tablicaPionkow[i][j] == 2 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 6)
+				else if (tablicaPionkow[i][j] == 2 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 6 || tablicaPionkow[i][j] == 8)
 					g2d.setColor(kolorPionkow2);
 
-				if (tablicaPionkow[i][j] != 0 && tablicaPionkow[i][j] != 5)
+				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 2 || tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 4)
 					g2d.fillOval(17 + 63 * i, 47 + 63 * j, 50, 50);
-				if (tablicaPionkow[i][j] == 6 || tablicaPionkow[i][j] == 7)
+				if (tablicaPionkow[i][j] == 6 || tablicaPionkow[i][j] == 7 || tablicaPionkow[i][j] == 8 || tablicaPionkow[i][j] == 9)
 					g2d.fillRect(17 + 63 * i, 47 + 63 * j, 50, 50);
 			}
 
@@ -169,7 +173,7 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 		g2d.drawRect(550, 493, 50, 50);
 		g2d.setFont(new Font("Arial", Font.BOLD, 12));
 		g2d.drawString("POLE", 560, 515);
-		g2d.drawString(KafelekInformacyjny.tmp, 570, 535);
+		g2d.drawString(Kafelek.tmp, 570, 535);
 
 	}
 
@@ -184,7 +188,7 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 		if (source == multiplayer) {
 			try {
 				serverSocket = new ServerSocket(5555);
-				JOptionPane.showMessageDialog(null, "Oczekiwanie na po��czenie!");
+				JOptionPane.showMessageDialog(null, "Oczekiwanie na połączenie!");
 				socket = serverSocket.accept();
 				oos = new ObjectOutputStream(socket.getOutputStream());
 				ois = new ObjectInputStream(socket.getInputStream());
@@ -210,6 +214,7 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+		}
 
 			if (source == opcje) {
 				new Opcje(this);
@@ -231,6 +236,5 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 
 				}
 			}
-		}
 	}
 }

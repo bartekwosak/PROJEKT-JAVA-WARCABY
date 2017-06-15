@@ -1,6 +1,5 @@
 package warcaby.klient;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -11,32 +10,28 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 
 public class Opcje extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private static Integer szerokosc = 650;
-	private static Integer wysokosc = 600;
 	protected static JFrame parent;
 	protected JFrame okno;
 	protected JLabel napisGlowny, napisStyl, napisZmianaWygladu, napisZmianaPionkow;
 	protected JButton stylDomyslny, stylPlanszy1, stylPlanszy2, stylPionkow1, stylPionkow2, stylDomyslnyPionkow;
-	protected JComboBox<Object> style,graNaCzas;
-	protected JRadioButton bicia, biciaWstecz;
+	protected JComboBox<Object> style;
 
 	public Opcje(JFrame oknoF) {
 		parent = oknoF;
 		okno = new JFrame();
 		okno.setTitle("Opcje");
-		okno.setSize(szerokosc, wysokosc);
+		okno.setSize(650, 300);
 		okno.setLocationRelativeTo(okno);
 		okno.setLayout(null);
 		okno.setResizable(false);
 
 		napisGlowny = new JLabel("OPCJE GRY");
 		napisGlowny.setBounds(265, 10, 120, 25);
-		napisGlowny.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
+		napisGlowny.setFont(new Font("Arial", Font.BOLD, 18));
 		napisGlowny.setForeground(Color.BLUE);
 		okno.add(napisGlowny);
 
@@ -46,44 +41,44 @@ public class Opcje extends JFrame implements ActionListener {
 		napisStyl.setForeground(Color.RED);
 		okno.add(napisStyl);
 
-		style = new JComboBox<Object>(new String[] { "DomyĹ›lny", "Metal", "Motif", "Nimbus" });
+		style = new JComboBox<Object>(new String[] { "Domyślny", "Metal", "Motif", "Nimbus" });
 		style.setBounds(225, 90, 200, 20);
 		okno.add(style);
 		style.addActionListener(this);
 
-		napisZmianaWygladu = new JLabel("WyglÄ…d planszy");
+		napisZmianaWygladu = new JLabel("Wygląd planszy");
 		napisZmianaWygladu.setBounds(10, 130, 120, 20);
 		napisZmianaWygladu.setFont(new Font("Calibri", Font.BOLD, 14));
 		napisZmianaWygladu.setForeground(Color.RED);
 		okno.add(napisZmianaWygladu);
 
-		stylDomyslny = new JButton("DomyĹ›lna");
+		stylDomyslny = new JButton("Domyślna");
 		stylDomyslny.setBounds(100, 160, 150, 20);
 		okno.add(stylDomyslny);
 		stylDomyslny.addActionListener(this);
 
-		stylPlanszy1 = new JButton("BeĹĽowo - biaĹ‚a");
+		stylPlanszy1 = new JButton("Beżowo - biała");
 		stylPlanszy1.setBounds(260, 160, 150, 20);
 		okno.add(stylPlanszy1);
 		stylPlanszy1.addActionListener(this);
 
-		stylPlanszy2 = new JButton("Niebiesko - ĹĽĂłĹ‚ta");
+		stylPlanszy2 = new JButton("Niebiesko - żółta");
 		stylPlanszy2.setBounds(420, 160, 150, 20);
 		okno.add(stylPlanszy2);
 		stylPlanszy2.addActionListener(this);
 
-		napisZmianaPionkow = new JLabel("WyglÄ…d pionkĂłw");
+		napisZmianaPionkow = new JLabel("Wygląd pionków");
 		napisZmianaPionkow.setBounds(10, 200, 120, 20);
 		napisZmianaPionkow.setFont(new Font("Calibri", Font.BOLD, 14));
 		napisZmianaPionkow.setForeground(Color.RED);
 		okno.add(napisZmianaPionkow);
 
-		stylDomyslnyPionkow = new JButton("DomyĹ›lny");
+		stylDomyslnyPionkow = new JButton("Domyślny");
 		stylDomyslnyPionkow.setBounds(100, 230, 150, 20);
 		okno.add(stylDomyslnyPionkow);
 		stylDomyslnyPionkow.addActionListener(this);
 
-		stylPionkow1 = new JButton("Czerwono - ĹĽĂłĹ‚te");
+		stylPionkow1 = new JButton("Czerwono - żółte");
 		stylPionkow1.setBounds(260, 230, 150, 20);
 		okno.add(stylPionkow1);
 		stylPionkow1.addActionListener(this);
@@ -93,35 +88,6 @@ public class Opcje extends JFrame implements ActionListener {
 		okno.add(stylPionkow2);
 		stylPionkow2.addActionListener(this);
 
-		napisZmianaWygladu = new JLabel("Rozgrywka");
-		napisZmianaWygladu.setBounds(10, 270, 80, 20);
-		napisZmianaWygladu.setFont(new Font("Calibri", Font.BOLD, 14));
-		napisZmianaWygladu.setForeground(Color.RED);
-		okno.add(napisZmianaWygladu);
-
-		bicia = new JRadioButton("OBOWIÄ„ZKOWE BICIA");
-		bicia.setBounds(160, 300, 200, 20);
-		bicia.setFont(new Font("Calibri", Font.BOLD, 12));
-		okno.add(bicia);
-		bicia.addActionListener(this);
-
-		biciaWstecz = new JRadioButton("BICIA DO TYĹ�U");
-		biciaWstecz.setBounds(370, 300, 200, 20);
-		biciaWstecz.setFont(new Font("Calibri", Font.BOLD, 12));
-		okno.add(biciaWstecz);
-		biciaWstecz.addActionListener(this);
-		
-		napisZmianaWygladu = new JLabel("Limit czasu");
-		napisZmianaWygladu.setBounds(10, 340, 80, 20);
-		napisZmianaWygladu.setFont(new Font("Calibri", Font.BOLD, 14));
-		napisZmianaWygladu.setForeground(Color.RED);
-		okno.add(napisZmianaWygladu);
-
-		graNaCzas = new JComboBox<Object>(new String[] { "Bez limitu", "3 minuty", "5 minut", "10 minut", "20 minut" });
-		graNaCzas.setBounds(225, 360, 200, 20);
-		okno.add(graNaCzas);
-		graNaCzas.addActionListener(this);
-		
 		okno.setVisible(true);
 	}
 
@@ -164,26 +130,10 @@ public class Opcje extends JFrame implements ActionListener {
 			Plansza.kolorPionkow2 = Color.DARK_GRAY;
 			parent.repaint();
 		}
-		if (source == bicia) {
-			/* Implementacja */
-			if (bicia.isSelected()) {
-				JOptionPane.showMessageDialog(null, "WĹ‚Ä…czono: " + bicia.getText());
-			} else {
-				JOptionPane.showMessageDialog(null, "WyĹ‚Ä…czono: " + bicia.getText());
-			}
-		}
-		if (source == biciaWstecz) {
-			/* Implementacja */
-			if (biciaWstecz.isSelected()) {
-				JOptionPane.showMessageDialog(null, "WĹ‚Ä…czono: " + biciaWstecz.getText());
-			} else {
-				JOptionPane.showMessageDialog(null, "WyĹ‚Ä…czono: " + biciaWstecz.getText());
-			}
-		}
 
 		if (source == style) {
 			String s = (String) style.getSelectedItem();
-			if (s == "DomyĹ›lny") {
+			if (s == "Domyślny") {
 				parent.getContentPane().setBackground(null);
 				parent.repaint();
 			}

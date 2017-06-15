@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JButton;
@@ -18,31 +19,36 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 
-public class Plansza extends JFrame implements ActionListener,Serializable,Runnable{
+
+public class Plansza extends JFrame implements ActionListener, Serializable {
+	
 	private static final long serialVersionUID = 1L;
-	static int tablicaPionkow[][];
+	protected static int tablicaPionkow[][];
 	private Integer szerokosc = 650;
 	private Integer wysokosc = 600;
 	private JButton start, wyjscie, opcje, multiplayer;
 	private JLabel napisGlowny, napisWersja;
 	private Plansza plansza;
 	private JTextPane poleIP;
-	private KafelekInformacyjny[][] kafelki;
+	private Kafelek[][] kafelki;
 	protected static Color kolorPlanszy1;
 	protected static Color kolorPlanszy2;
 	protected static Color kolorPionkow1;
 	protected static Color kolorPionkow2;
-	
-	Socket socket;
-	
-	static ObjectInputStream ois;
-	static ObjectOutputStream oos;
-	static boolean multi;
-	
+
+	protected ServerSocket serverSocket;
+	protected Socket socket;
+	protected static ObjectInputStream ois;
+	protected static ObjectOutputStream oos;
+	protected static boolean multi;
+	protected static boolean gra;
+
 	public Plansza() {
 		super("Warcaby");
 		tablicaPionkow = new int[8][8];
-		kafelki = new KafelekInformacyjny[8][8];
+		kafelki = new Kafelek[8][8];
+		multi = false;
+		gra = false;
 
 		setSize(szerokosc, wysokosc);
 		setLocationRelativeTo(plansza);
@@ -55,12 +61,12 @@ public class Plansza extends JFrame implements ActionListener,Serializable,Runna
 
 		napisGlowny = new JLabel("WARCABY");
 		napisGlowny.setBounds(535, 15, 140, 30);
-		napisGlowny.setFont(new Font("Comic Sans MS", Font.BOLD, 17));
+		napisGlowny.setFont(new Font("Arial", Font.BOLD, 17));
 		napisGlowny.setForeground(Color.BLUE);
 		add(napisGlowny);
 
 		napisWersja = new JLabel("KLIENT");
-		napisWersja.setBounds(545, 55, 140, 20);
+		napisWersja.setBounds(555, 55, 140, 20);
 		napisWersja.setFont(new Font("Calibri", Font.BOLD, 14));
 		napisWersja.setForeground(Color.RED);
 		add(napisWersja);
@@ -96,7 +102,7 @@ public class Plansza extends JFrame implements ActionListener,Serializable,Runna
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				kafelki[i][j] = new KafelekInformacyjny(this, i, j);
+				kafelki[i][j] = new Kafelek(this, i, j);
 				add(kafelki[i][j]);
 			}
 		}
@@ -121,8 +127,14 @@ public class Plansza extends JFrame implements ActionListener,Serializable,Runna
 					tablicaPionkow[i][j] = 2;
 			}
 		}
+		gra = true;
 	}
-	
+
+	void odbierzPakiet() {
+		int tmp[][] = new int[8][8];
+		tablicaPionkow = tmp;
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -140,29 +152,34 @@ public class Plansza extends JFrame implements ActionListener,Serializable,Runna
 		}
 		for (int j = 0; j < 8; j++)
 			for (int i = 0; i < 8; i++) {
-				if (tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 5){
+				if (tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 5
+						|| tablicaPionkow[i][j] == 8 || tablicaPionkow[i][j] == 9) {
 					g2d.setColor(Color.YELLOW);
-					g2d.drawRect(kafelki[i][j].x+3,kafelki[i][j].y+25, kafelki[i][j].width, kafelki[i][j].height);
+					g2d.drawRect(kafelki[i][j].x + 3, kafelki[i][j].y + 25, kafelki[i][j].width, kafelki[i][j].height);
 				}
-				}
+			}
 		for (int j = 0; j < 8; j++)
 			for (int i = 0; i < 8; i++) {
-				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 7)
+				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 3 || tablicaPionkow[i][j] == 7
+						|| tablicaPionkow[i][j] == 9)
 					g2d.setColor(kolorPionkow1);
-				else if (tablicaPionkow[i][j] == 2 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 6)
+				else if (tablicaPionkow[i][j] == 2 || tablicaPionkow[i][j] == 4 || tablicaPionkow[i][j] == 6
+						|| tablicaPionkow[i][j] == 8)
 					g2d.setColor(kolorPionkow2);
 
-				if (tablicaPionkow[i][j] !=0 && tablicaPionkow[i][j] != 5)
+				if (tablicaPionkow[i][j] == 1 || tablicaPionkow[i][j] == 2 || tablicaPionkow[i][j] == 3
+						|| tablicaPionkow[i][j] == 4)
 					g2d.fillOval(17 + 63 * i, 47 + 63 * j, 50, 50);
-				if(tablicaPionkow[i][j]==6 || tablicaPionkow[i][j] ==7)
+				if (tablicaPionkow[i][j] == 6 || tablicaPionkow[i][j] == 7 || tablicaPionkow[i][j] == 8
+						|| tablicaPionkow[i][j] == 9)
 					g2d.fillRect(17 + 63 * i, 47 + 63 * j, 50, 50);
 			}
-	
+
 		g2d.setColor(Color.BLACK);
 		g2d.drawRect(550, 493, 50, 50);
 		g2d.setFont(new Font("Arial", Font.BOLD, 12));
 		g2d.drawString("POLE", 560, 515);
-		g2d.drawString(KafelekInformacyjny.tmp, 570, 535);
+		g2d.drawString(Kafelek.tmp, 570, 535);
 
 	}
 
@@ -173,33 +190,34 @@ public class Plansza extends JFrame implements ActionListener,Serializable,Runna
 			ustaw();
 			repaint();
 		}
+
 		if (source == multiplayer) {
 			try {
 				socket = new Socket("localhost", 5555);
-				JOptionPane.showMessageDialog(null, "Po��czono z serwerem");
+				JOptionPane.showMessageDialog(null, "Połączono z serwerem");
 				oos = new ObjectOutputStream(socket.getOutputStream());
 				ois = new ObjectInputStream(socket.getInputStream());
 				multi = true;
 				ustaw();
 				repaint();
-		        new Thread(){
-		            public void run(){
-		                while(true){
-		                	try {
+				new Thread() {
+					public void run() {
+						while (true) {
+							try {
 								int tmp[][] = (int[][]) ois.readObject();
-								if(!tmp.equals(tablicaPionkow)){
+								if (!tmp.equals(tablicaPionkow)) {
 									System.out.println("Zamieniono");
 									tablicaPionkow = tmp;
 									repaint();
-									}
+								}
 							} catch (ClassNotFoundException | IOException e) {
 								e.printStackTrace();
-							} 
-		              }
-		            }
-		            }.start();
+							}
+						}
+					}
+				}.start();
 			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, "Nie nawi�zano po��czenia");
+				JOptionPane.showMessageDialog(null, "Nie nawiązano połączenia");
 			}
 		}
 
@@ -208,7 +226,7 @@ public class Plansza extends JFrame implements ActionListener,Serializable,Runna
 		}
 
 		if (source == wyjscie) {
-			int decyzja = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz wyjsc?", "Confirm Dialog",
+			int decyzja = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz wyjść?", "Confirm Dialog",
 					JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
 			if (decyzja == JOptionPane.YES_OPTION) {
 				dispose();
@@ -216,17 +234,12 @@ public class Plansza extends JFrame implements ActionListener,Serializable,Runna
 					ois.close();
 					oos.close();
 					socket.close();
-					
+					serverSocket.close();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+
 			}
 		}
-	}
-
-	@Override
-	public void run() {
-		
 	}
 }
