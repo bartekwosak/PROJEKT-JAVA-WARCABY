@@ -11,15 +11,60 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+/** Klasa Opcje zawiera zmienne oraz metody odpowiedzialne za prawidłowe wyświetlanie okienka opcji gry oraz ich działanie. 
+ * W klasie istnieją zmienne będące obiektami klas z pakietu Swing: JFrame, JLabel, JButton oraz JComboBox. Ponadto
+ * występuje konstruktor oraz przesłonięta metoda actionPerformed odpowiedzialna za prawidłowe akcje po wciśnięciu 
+ * danego przycisku lub innego komponentu. 
+ * Klasa implementuje interfejs ActionListener odpowiadający za określenie akcji po wciśnięciu np. danego przycisku.
+ * Ponadto dziedziczy ona po klasie JFrame - odpowiedzialnej za tworzenie okna opcji gry.
+ * @author Bartłomiej Osak, Tomasz Pasternak
+ * @see ActionListener
+ * @see JFrame
+ */
 public class Opcje extends JFrame implements ActionListener {
 
+	/** Zmienna określająca unikalny numer w celu serializacji. */
 	private static final long serialVersionUID = 1L;
-	protected static JFrame parent;
-	protected JFrame okno;
-	protected JLabel napisGlowny, napisStyl, napisZmianaWygladu, napisZmianaPionkow;
-	protected JButton stylDomyslny, stylPlanszy1, stylPlanszy2, stylPionkow1, stylPionkow2, stylDomyslnyPionkow;
-	protected JComboBox<Object> style;
+	/** Zmienna JFrame odwołująca się do okna głównej aplikacji. Wykorzystywana podczas zmiany koloru planszy/pionków w opcjach. */
+	protected static JFrame parent; 
+	 /** Zmienna JFrame okreslająca okno z opcjami gry. */
+	protected JFrame okno; 
+	/** Zmienna JLabel używana w celu tworzenia napisu 'Opcje Gry'. */
+	protected JLabel napisGlowny;
+	/** Zmienna JLabel używana w celu tworzenia napisu 'Styl aplikacji'. */
+	protected JLabel napisStyl; 
+	/** Zmienna JLabel używana w celu tworzenia napisu 'Wygląd planszy'. */
+	protected JLabel napisZmianaWygladu; 
+	/** Zmienna JLabel używana w celu tworzenia napisu 'Wygląd pionków'. */
+	protected JLabel napisZmianaPionkow; 
+	/** Zmienna JButton odpowiedzialna za przycisk w sekcji 'Wygląd planszy' z nazwą 'Domyślny' - ustawia styl planszy na domyślny. */
+	protected JButton stylDomyslny; 
+	/** Zmienna JButton odpowiedzialna za przycisk w sekcji 'Wygląd planszy' z nazwą 'Beżowo - biała' - ustawia styl planszy na beżowo-białą. */
+	protected JButton stylPlanszy1; 
+	/** Zmienna JButton odpowiedzialna za przycisk w sekcji 'Wygląd planszy' z nazwą 'Niebiesko - żółta' - ustawia styl planszy na niebiesko-żółtą. */
+	protected JButton stylPlanszy2; 
+	/** Zmienna JButton odpowiedzialna za przycisk w sekcji 'Wygląd pionków' z nazwą 'Czerwono - żółte' - ustawia styl pionków na czerwono-żółte. */
+	protected JButton stylPionkow1; 
+	/** Zmienna JButton odpowiedzialna za przycisk w sekcji 'Wygląd pionków' z nazwą 'Zielono - szare' - ustawia styl pionków na zielono - szare. */
+	protected JButton stylPionkow2; 
+	/** Zmienna JButton odpowiedzialna za przycisk w sekcji 'Wygląd pionków' z nazwą 'Domyślny' - ustawia styl pionków na domyślny. */
+	protected JButton stylDomyslnyPionkow; 
+	/** Zmienna JComboBox odpowiedzialna za listę z możliwością wyboru ogólnego wyglądu aplikacji - zmiana koloru okienka. */
+	protected JComboBox<Object> style; 
 
+	/** Konstruktor klasy Opcje przyjmujący jeden argument.
+	 * W konstruktorze definiowane są: rozmiar okna z opcjami gry, jego pozostałe właściwości. Ponadto 
+	 * zdefiniowano właściwości napisów poszczególnych sekcji na komponencie JLabel tj. font, rozmiar, wymiary, kolor. 
+	 * Zdefiniowano listę wysuwaną umożlwiającą wybór stylu aplikacji. Określono rozmiar, styl.
+	 * Ponadto zdefiniowano właściwości poszczególnych przycisków na komponencie JButton - ustalono font, napis oraz wymiar.
+	 * Po zdefiniowaniu każdego z użytych komponentów dodano go do okna z opcjami głównymi metodą {@link JFrame#add(java.awt.Component)}.
+	 * @param oknoF - argument typu JFrame, czyli okno - główne okno aplikacji.
+	 * @see JFrame
+	 * @see JLabel
+	 * @see JComboBox
+	 * @see JButton
+	 * @see JFrame#add(java.awt.Component)
+	 */
 	public Opcje(JFrame oknoF) {
 		parent = oknoF;
 		okno = new JFrame();
@@ -91,6 +136,15 @@ public class Opcje extends JFrame implements ActionListener {
 		okno.setVisible(true);
 	}
 
+	/** Przesłonięta metoda służąca do określania zachowania aplikacji po kliknięciu na dany komponent przez użytkownika.
+	 * W metodzie określone są działania dla przycisków oraz listy wysuwanej. Ponadto po wciśnięciu niektórych z przycisków
+	 * wyświetlane są okna dialogowe za pomocą JOptionPane. W przypadku zmiany wyglądu aplikacji lub pionków lub planszy
+	 * wywoływana jest metoda klasy {@link JFrame#repaint()}, w celu nałożenia zmian na wygląd poszczególnych komponentów.
+	 * Metoda jest typu void - nie zwraca żadnej wartości. 
+	 * @see JOptionPane
+	 * @see JOptionPane#showMessageDialog(java.awt.Component, Object)
+	 * @see JFrame#repaint()
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();

@@ -333,7 +333,7 @@ public class Kafelek extends JComponent implements MouseListener {
 				}
 			}
 		}
-		if (Plansza.game) {
+		if (Plansza.gra) {
 			int b = 0;
 			int c = 0;
 			for (int i = 0; i < 8; i++) {
