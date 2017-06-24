@@ -327,7 +327,6 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 									repaint();
 								}
 							} catch (ClassNotFoundException | IOException e) {
-								e.printStackTrace();
 							}
 						}
 					}

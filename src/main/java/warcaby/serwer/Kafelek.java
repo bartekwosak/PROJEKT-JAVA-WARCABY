@@ -178,8 +178,8 @@ public class Kafelek extends JComponent implements MouseListener {
 																									// POLE
 																									// PIONKIEM
 			{
-				iBicie = -1;
-				jBicie = -1;
+				iBicie = -2;
+				jBicie = -2;
 				Plansza.tablicaPionkow[_i][_j] += 2;
 				// ******************************************************
 				if (Plansza.tablicaPionkow[_i][_j] == 8 || Plansza.tablicaPionkow[_i][_j] == 9) // KLIKNIETA
@@ -307,8 +307,8 @@ public class Kafelek extends JComponent implements MouseListener {
 				}
 				// *****************************************************
 				if (Plansza.tablicaPionkow[_i][_j] == 3) {
-					iBicie = -1;
-					jBicie = -1;
+					iBicie = -2;
+					jBicie = -2;
 					if (_i != 0 && _i != 7) {
 						if (Plansza.tablicaPionkow[_i - 1][_j + 1] == 0) {
 							Plansza.tablicaPionkow[_i - 1][_j + 1] = 5;
@@ -387,14 +387,14 @@ public class Kafelek extends JComponent implements MouseListener {
 				}
 			if ((_i == iBicie + 1 || _i == iBicie - 1) && (_j == jBicie - 1 || _j == jBicie + 1)) {
 				Plansza.tablicaPionkow[iBicie][jBicie] = 0;
-				iBicie = -1;
-				jBicie = -1;
+				iBicie = -2;
+				jBicie = -2;
 			}
 			// *********** KROLOWKA B /*
-			if (_j == 0) {
+			if (_j == 0 && Plansza.tablicaPionkow[_i][_j] == 2) {
 				Plansza.tablicaPionkow[_i][_j] = 6;
 			}
-			if (_j == 7) {
+			if (_j == 7 && Plansza.tablicaPionkow[_i][_j] == 1) {
 				Plansza.tablicaPionkow[_i][_j] = 7;
 			}
 			// ********** KROLOWKA B*/
