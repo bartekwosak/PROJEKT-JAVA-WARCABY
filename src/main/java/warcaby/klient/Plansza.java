@@ -212,6 +212,7 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 					tablicaPionkow[i][j] = 2;
 			}
 		}
+
 		gra = true;
 	}
 	
@@ -354,7 +355,7 @@ public class Plansza extends JFrame implements ActionListener, Serializable {
 					socket.close();
 					serverSocket.close();
 				} catch (IOException e1) {
-					e1.printStackTrace();
+
 				}
 
 			}
